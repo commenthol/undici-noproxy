@@ -1,0 +1,57 @@
+{
+  "name": "undici-noproxy",
+  "version": "1.0.0-0",
+  "description": "no_proxy Agent for undici",
+  "keywords": [
+    "proxy",
+    "no_proxy",
+    "no-proxy"
+  ],
+  "homepage": "https://github.com/commenthol/undici-noproxy#readme",
+  "bugs": {
+    "url": "https://github.com/commenthol/undici-noproxy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commenthol/undici-noproxy.git"
+  },
+  "license": "MIT",
+  "author": "commenthol <commenthol@gmail.com>",
+  "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "types": "./types",
+  "directories": {},
+  "files": [
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "ci": "npm-run-all lint test types",
+    "lint": "eslint --fix --ext .js .",
+    "test": "mocha",
+    "test:httpproxy": "PORT=40404 http_proxy=http://localhost:40404 mocha",
+    "test:noproxy": "PORT=40404 http_proxy=http://localhost:40404 no_proxy=httpbin.org mocha",
+    "test:all": "c8 npm-run-all test test:httpproxy test:noproxy",
+    "types": "rm -r types; tsc --emitDeclarationOnly true --noEmitOnError"
+  },
+  "dependencies": {
+    "undici": "^4.16.0",
+    "uses-proxy": "^1.0.0-0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.0.0",
+    "c8": "^7.11.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "mocha": "^9.2.2",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^4.6.2"
+  },
+  "engines": {
+    "node": ">= 16"
+  }
+}
