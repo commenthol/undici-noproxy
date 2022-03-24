@@ -12,24 +12,29 @@ const kProxy = Symbol('proxy agent options')
 const kAgent = Symbol('proxy agent')
 const kMatcher = Symbol('no proxy matcher')
 
+/** @typedef {import('./types').NoProxyAgentOptions} NoProxyAgentOptions */
+
 export class NoProxyAgent extends Dispatcher {
   /**
-   * @param {object | string} [opts] if string than used as proxyUri
-   * @param {string} [opts.uri] proxy Url
-   * @param {'http'|'https'} [opts.protocol='https']
-   * @param {string|string[]} [opts.noProxy] no_proxy string
-   * @param {(origin: URL, opts: Object) => Dispatcher)} [opts.factory]
-   * @param {number} [opts.maxRedirections=0]
+   * @param {NoProxyAgentOptions|string} [opts]
    */
   constructor (opts) {
+    // @ts-ignore
     super(opts)
+    // @ts-ignore
     this[kAgent] = new Agent(opts)
     this[kProxy] = buildProxyOptions(opts)
+    // @ts-ignore
     this[kMatcher] = shouldProxy(this[kProxy])
   }
 
+  /**
+   * @param {Dispatcher.DispatchOptions} opts
+   * @param {Dispatcher.DispatchHandlers} handler
+   * @returns
+   */
   dispatch (opts, handler) {
-    const { hostname, host } = new URL(opts.origin)
+    const { hostname, host } = new URL(opts.origin || '')
 
     const doProxy = this[kMatcher](hostname)
 
@@ -56,6 +61,10 @@ export class NoProxyAgent extends Dispatcher {
   }
 }
 
+/**
+ * @param {object} opts
+ * @returns {{proxyUri?: string, protocol?: string, noProxy?: string|string[]}|undefined}
+ */
 function buildProxyOptions (opts) {
   if (typeof opts === 'string') {
     opts = { uri: opts }
