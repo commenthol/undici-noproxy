@@ -13,6 +13,7 @@ const {
 } = process.env
 
 describe('proxy', function () {
+  this.timeout(5000)
   let proxyServer
   let uri
   const url = 'http://httpbin.org/anything'
