@@ -1,7 +1,7 @@
 {
   "name": "undici-noproxy",
   "version": "1.0.0-1",
-  "description": "no_proxy Agent for undici",
+  "description": "no_proxy ProxyAgent for undici",
   "keywords": [
     "proxy",
     "no_proxy",
