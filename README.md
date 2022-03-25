@@ -47,6 +47,20 @@ const json = await res.body.json()
 proxyAgent.close()
 ```
 
+## with global dispatcher
+
+```js
+import { fetch, setGlobalDispatcher } from 'undici'
+import { NoProxyAgent } from 'undici-noproxy'
+const proxyAgent = new NoProxyAgent()
+
+setGlobalDispatcher(proxyAgent)
+
+const res = await fetch(url)
+const json = await res.json()
+```
+
+
 # license
 
 MIT licensed
