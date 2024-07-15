@@ -7,16 +7,16 @@ export class NoProxyAgent extends Dispatcher {
     close(): Promise<void>;
     [kAgent]: Agent;
     [kProxy]: {
-        proxyUri?: string | undefined;
-        protocol?: string | undefined;
-        noProxy?: string | string[] | undefined;
+        proxyUri?: string;
+        protocol?: string;
+        noProxy?: string | string[];
     } | undefined;
     [kMatcher]: (hostname: string) => boolean;
 }
-export type NoProxyAgentOptions = import('./types').NoProxyAgentOptions;
-import { Dispatcher } from "undici";
+export type NoProxyAgentOptions = import("./types").NoProxyAgentOptions;
+import { Dispatcher } from 'undici';
 declare const kAgent: unique symbol;
-import { Agent } from "undici";
+import { Agent } from 'undici';
 declare const kProxy: unique symbol;
 declare const kMatcher: unique symbol;
 export {};
