@@ -1,9 +1,9 @@
-/** @typedef {import('./types').NoProxyAgentOptions} NoProxyAgentOptions */
+/** @typedef {import('./types.d.ts').NoProxyAgentOptions} NoProxyAgentOptions */
 export class NoProxyAgent extends Dispatcher {
     /**
      * @param {NoProxyAgentOptions|string} [opts]
      */
-    constructor(opts?: string | import("./types").NoProxyAgentOptions | undefined);
+    constructor(opts?: NoProxyAgentOptions | string);
     close(): Promise<void>;
     [kAgent]: Agent;
     [kProxy]: {
@@ -11,9 +11,9 @@ export class NoProxyAgent extends Dispatcher {
         protocol?: string;
         noProxy?: string | string[];
     } | undefined;
-    [kMatcher]: (hostname: string) => boolean;
+    [kMatcher]: any;
 }
-export type NoProxyAgentOptions = import("./types").NoProxyAgentOptions;
+export type NoProxyAgentOptions = import("./types.d.ts").NoProxyAgentOptions;
 import { Dispatcher } from 'undici';
 declare const kAgent: unique symbol;
 import { Agent } from 'undici';

@@ -6,29 +6,28 @@ import { URL, fileURLToPath } from 'url'
 import http from 'http'
 import net from 'net'
 
-// eslint-disable-next-line no-console
 const log = console
 
 /**
-  * build proxy
-  * @param {number} port
-  * @returns {Promise<http.Server>}
-  * @example
-  * const proxyServer = await buildProxy(8080)
-  * console.info(`proxy running on port ${proxyServer.address().port}`)
-  **/
-export function buildProxy (port = 0) {
+ * build proxy
+ * @param {number} port
+ * @returns {Promise<http.Server>}
+ * @example
+ * const proxyServer = await buildProxy(8080)
+ * console.info(`proxy running on port ${proxyServer.address().port}`)
+ **/
+export function buildProxy(port = 0) {
   return new Promise((resolve, reject) => {
     const server = proxy(http.createServer())
-    server.listen(port, (err) => err ? reject(err) : resolve(server))
+    server.listen(port, (err) => (err ? reject(err) : resolve(server)))
   })
 }
 
 /**
-  * @param {http.Server} server
-  * @returns {http.Server}
-  */
-export function proxy (server) {
+ * @param {http.Server} server
+ * @returns {http.Server}
+ */
+export function proxy(server) {
   server.on('request', (req, res) => {
     const { method, headers } = req
     const {
@@ -47,7 +46,12 @@ export function proxy (server) {
       headers
     }
 
-    headers['X-Forwarded-For'] = [req.socket.remoteAddress, headers['X-Forwarded-For']].filter(Boolean).join(', ')
+    headers['X-Forwarded-For'] = [
+      req.socket.remoteAddress,
+      headers['X-Forwarded-For']
+    ]
+      .filter(Boolean)
+      .join(', ')
 
     const proxyReq = http.request(options, (proxyRes) => {
       proxyConn(proxyRes, res)
@@ -65,15 +69,17 @@ export function proxy (server) {
   })
 
   // ssl tunneling
-  server.on('connect', (req, socket, head) => {
+  server.on('connect', (req, socket, _head) => {
     let { hostname, port, protocol } = new URL(req.url)
 
     if (!hostname) {
-      [hostname, port] = req.url.split(':')
+      ;[hostname, port] = req.url.split(':')
     }
 
     // Return SSL-proxy greeting header.
-    socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n')
+    socket.write(
+      'HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n'
+    )
 
     // Now forward SSL packets in both directions until done.
     const client = net.connect({
@@ -90,7 +96,7 @@ export function proxy (server) {
   return server
 }
 
-function proxyConn (conn, connOut) {
+function proxyConn(conn, connOut) {
   // data received
   conn.on('data', function (chunk) {
     connOut.write(chunk, 'binary')
@@ -101,7 +107,9 @@ function proxyConn (conn, connOut) {
   })
 
   const connExit = (err) => {
-    if (err) { log.error(err) }
+    if (err) {
+      log.error(err)
+    }
     connOut.end()
   }
 
@@ -110,7 +118,7 @@ function proxyConn (conn, connOut) {
   conn.once('close', connExit)
 }
 
-function fixPortNumber (port, protocol) {
+function fixPortNumber(port, protocol) {
   return port || (protocol === 'https:' ? 443 : 80)
 }
 
